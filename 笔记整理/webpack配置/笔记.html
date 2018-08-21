@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>笔记</title>
+  <!-- <link rel="stylesheet" href="lib/css/monokai-sublime.css"> -->
+  <link rel="stylesheet" href="lib/css/default.min.css">
+  <link rel="stylesheet" href="lib/css/vs2015.css">
+  <link rel="stylesheet" href="lib/css/zTreeStyle/zTreeStyle.css">
+  <link rel="stylesheet" href="lib/css/base.css">
+  <link rel="stylesheet" href="lib/css/index.css">
+</head>
+
+<body>
+  <div style='width:25%;'>
+    <ul id="tree" class="ztree" style='width:100%'>
+
+    </ul>
+  </div>
+  <div id='readme' style='width:70%;margin-left:20%;'>
+    <article class='markdown-body'><h1 id="webpack-">webpack-入门</h1>
+<h2 id="webpack-">webpack概述</h2>
+<blockquote>
+<p><em>webpack</em> 是一个现代 JavaScript 应用程序的<em>静态模块打包器(module bundler</em> )</p>
+</blockquote>
+<p><a href="https://www.webpackjs.com/">webpack中文网</a></p>
+<p><a href="https://webpack.js.org/">webpack官网</a></p>
+<p><img src="images/webpack.png" alt=""></p>
+<h2 id="webpack-">webpack本地安装（推荐）</h2>
+<ul>
+<li>项目初始化</li>
+</ul>
+<pre><code class="lang-bash">npm init -y
+</code></pre>
+<ul>
+<li>安装</li>
+</ul>
+<pre><code class="lang-bash">npm install --save-dev webpack
+npm install --save-dev webpack-cli
+</code></pre>
+<ul>
+<li>配置scripts</li>
+</ul>
+<pre><code class="lang-js">  &quot;scripts&quot;: {
+    &quot;build&quot;: &quot;webpack index.js -o ./dist/bundle.js&quot;
+  },
+</code></pre>
+<ul>
+<li>使用命令</li>
+</ul>
+<pre><code class="lang-bash">npm run build  # 就可以使用webpack进行打包了
+</code></pre>
+<h2 id="save-save-dev-">save与save-dev的区别</h2>
+<ul>
+<li><code>npm install jquery --save</code> 项目的依赖项，在项目中需要使用<ul>
+<li>简写：<code>npm install jquery -S</code></li>
+<li>简写：<code>npm install jquery</code>, 新版本npm<code>--save</code>可以省略不写</li>
+<li>下载的包在<code>dependencies</code>中可以查看</li>
+</ul>
+</li>
+<li><code>npm install webpack --save-dev</code>:项目开发阶段的依赖项，项目上线时不需要使用<ul>
+<li>简写：<code>npm install webpack -D</code></li>
+<li>下载的包在<code>devDependencies</code>中可以查看</li>
+</ul>
+</li>
+<li><code>npm install nodemon -g</code>, 全局安装，项目无需依赖，安装命令行工具<ul>
+<li>下载的包存放在C盘的npm目录中</li>
+</ul>
+</li>
+</ul>
+<h2 id="scripts-">scripts标签的解释</h2>
+<h3 id="-">基本使用</h3>
+<p>在package.json文件中，有一个字段<code>scripts</code>,用于配置命令的别名</p>
+<pre><code class="lang-bash">  &quot;scripts&quot;: {
+    &quot;build&quot;: &quot;webpack index.js -o ./dist/bundle.js&quot;,
+    &quot;cc&quot;: &quot;ping www.baidu.com&quot;,
+    &quot;pp&quot;: &quot;npm install jquery&quot;
+  },
+</code></pre>
+<p>使用<code>npm run cc</code>相当于<code>ping www.baidu.com</code></p>
+<p>使用<code>npm run pp</code>相当于<code>npm install jquery</code></p>
+<h3 id="-scripts-">特殊的scripts命令</h3>
+<ul>
+<li><a href="https://www.npmjs.com.cn/misc/scripts">npm-scripts</a></li>
+<li><a href="https://www.npmjs.com.cn/cli/test">npm-test</a></li>
+<li><a href="https://www.npmjs.com.cn/cli/start">npm-start</a></li>
+<li><a href="https://www.npmjs.com.cn/cli/restart">npm-restart</a></li>
+<li><a href="https://www.npmjs.com.cn/cli/stop">npm-stop</a></li>
+<li><a href="https://www.npmjs.com.cn/misc/config">npm-config</a></li>
+</ul>
+<p>如果配置了这个6个别名，不需要加<code>run</code></p>
+<pre><code class="lang-bash">  &quot;scripts&quot;: {
+    &quot;build&quot;: &quot;webpack index.js -o ./dist/bundle.js&quot;,
+    &quot;cc&quot;: &quot;ping www.baidu.com&quot;,
+    &quot;pp&quot;: &quot;npm install jquery&quot;,
+    &quot;start&quot;: &quot;node app.js&quot;,
+    &quot;test&quot;: &quot;npm install moment&quot;
+  },
+</code></pre>
+<p>使用<code>npm start</code>相当于<code>node app.js</code></p>
+<p>使用<code>npm test</code>相当于<code>npm install moment</code></p>
+<h3 id="-">注意点</h3>
+<p>在script中配置的命令，会优先访问当前目录下<code>node_modueles/.bin/</code>下的命令</p>
+<p><strong>所以没有全局安装webpack，也能使用，这也是webpack推荐使用的方式</strong></p>
+<h2 id="webpack-">webpack全局安装（不推荐）</h2>
+<h3 id="-">安装</h3>
+<pre><code>npm install webpack webpack-cli -g
+</code></pre><h3 id="-">使用</h3>
+<pre><code class="lang-bash">webpack index.js -o ./dist/bundle.js
+</code></pre>
+<p><strong>不推荐全局安装 webpack。这会将你项目中的 webpack 锁定到指定版本，并且在使用不同的 webpack 版本的项目中，可能会导致构建失败。</strong></p>
+<h2 id="-webpack-config-js">配置文件-webpack.config.js</h2>
+<blockquote>
+<p>如果所有的参数都拼接到webpack-dev-server的后面，非常的麻烦，因此可以提供webpack.config.js来进行配置</p>
+</blockquote>
+<ul>
+<li>在项目的根目录下面新建<code>webpack.config.js</code>文件</li>
+</ul>
+<pre><code class="lang-bash">const path = require(&#39;path&#39;)
+// 这是一个nodejs文件
+module.exports = {
+  // 设置入口文件
+  entry: path.join(__dirname, &#39;index.js&#39;),
+  // 设置出口
+  output: {
+    // 设置输出目录
+    path: path.join(__dirname, &#39;dist&#39;),
+    // 输出文件
+    filename: &#39;bundle.js&#39;
+  }
+}
+</code></pre>
+<ul>
+<li>执行命令</li>
+</ul>
+<pre><code>webpack  // webpack会自动读取当前目录下的配置文件
+</code></pre><ul>
+<li>模式的配置</li>
+</ul>
+<pre><code class="lang-js">// 设置打包的模式
+//&#39;production&#39;
+//development  
+mode: &#39;production&#39;
+</code></pre>
+<h1 id="webpack-loaders">webpack-loaders</h1>
+<blockquote>
+<p>webpack 可以使用 <a href="https://www.webpackjs.com/concepts/loaders">loader</a> 来预处理文件。这允许你打包除 JavaScript 之外的任何静态资源。你可以使用 Node.js 来很简单地编写自己的 loader。 </p>
+</blockquote>
+<h2 id="css-loader-css-">css-loader处理css文件</h2>
+<ul>
+<li>安装</li>
+</ul>
+<pre><code class="lang-bash">npm install --save-dev style-loader css-loader
+</code></pre>
+<ul>
+<li>配置</li>
+</ul>
+<pre><code class="lang-js">  module: {
+    // loader的规则
+    rules: [
+      {
+        // 正则表达式，用于匹配所有的css文件
+        test: /\.css$/,
+        // 使用什么样的loader进行解析
+        use: [
+          // css-loader 解释(interpret) @import 和 url() ，会 import/require() 后再解析(resolve)它们。      // style-loader: 把解析完成的css代码插入到DOM中，需要配合css-loader使用
+          // 数组中，loader的顺序不能改变，webpack使用的时候，是从后往前加载的。
+          { loader: &quot;style-loader&quot; },
+          { loader: &quot;css-loader&quot; }
+        ]
+      }
+    ]
+  },
+</code></pre>
+<h2 id="less-loader-less-">less-loader处理less文件</h2>
+<ul>
+<li>安装</li>
+</ul>
+<pre><code class="lang-bash">npm install --save-dev less-loader less
+</code></pre>
+<ul>
+<li>配置</li>
+</ul>
+<pre><code class="lang-js">{
+    // 匹配所有的less文件
+    test: /\.less$/,
+        use: [
+            // css-loader：把生成css代码插入到DOM中
+            { loader: &quot;style-loader&quot; },
+            // 将css文件交给css-loader解析
+            { loader: &quot;css-loader&quot; },
+            // less-loader: 将less文件解析成css文件
+            { loader: &quot;less-loader&quot;}
+        ]
+}
+</code></pre>
+<h2 id="file-loader-">file-loader处理图片文件</h2>
+<ul>
+<li>安装</li>
+</ul>
+<pre><code class="lang-bash">npm install --save-dev file-loader
+</code></pre>
+<ul>
+<li>配置</li>
+</ul>
+<pre><code class="lang-js">{
+    // 配置图片加载
+    test: /\.(png|jpg|gif)$/,
+        use: [
+            {
+                loader: &#39;file-loader&#39;
+            }
+        ]
+}
+</code></pre>
+<ul>
+<li>md5文件名的说明</li>
+</ul>
+<pre><code class="lang-js">md5值，访问文件名重复，如果是相同的图片，计算出来的md5码是相同的。
+</code></pre>
+<h2 id="url-loader-">url-loader处理图片文件</h2>
+<blockquote>
+<p>url-loader与file-loader一样，也可以处理图片，但是url-loader可以以base64编码的方式处理图片</p>
+</blockquote>
+<ul>
+<li>安装</li>
+</ul>
+<pre><code class="lang-bash">npm install --save-dev url-loader
+</code></pre>
+<ul>
+<li>配置</li>
+</ul>
+<pre><code class="lang-bash">{
+    // 配置图片加载
+    test: /\.(png|jpg|gif)$/,
+        use: [
+            {
+                loader: &#39;url-loader&#39;
+            }
+        ]
+}
+</code></pre>
+<ul>
+<li>base64的优点</li>
+</ul>
+<pre><code class="lang-js">1. 精灵图的作用：减小网络请求
+2. base64:减少网络请求  通过京东查看base64编码的图片
+</code></pre>
+<ul>
+<li>设置limit参数</li>
+</ul>
+<pre><code class="lang-js">{
+    // 配置图片加载
+    test: /\.(png|jpg|gif)$/,
+        use: [
+            {
+                loader: &#39;url-loader&#39;,
+                options: {
+                    // 限定文件大小，注意：如果文件超出了大小，会自动调用file-loader，所以安装url-loader通过都要安装file-loader
+                    limit: 8192
+                }
+            }
+        ]
+}
+</code></pre>
+<h2 id="url-loader-">url-loader处理字体图标文件</h2>
+<blockquote>
+<p>处理字体图标文件与处理图标一模一样</p>
+</blockquote>
+<ul>
+<li>配置</li>
+</ul>
+<pre><code class="lang-json">{
+    // 配置字体图标加载
+    test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
+        use: [
+            {
+                loader: &#39;url-loader&#39;,
+                options: {
+                    // 限定文件大小
+                    limit: 819200
+                }
+            }
+        ]
+}
+
+</code></pre>
+<h2 id="babel-es-">babel处理高版本的ES语法</h2>
+<h3 id="-">介绍</h3>
+<p>Babel 是一个 JavaScript 编译器。</p>
+<p>今天就开始使用下一代 JavaScript 语法吧！</p>
+<p><a href="http://babeljs.io/">官网</a></p>
+<p><a href="https://www.babeljs.cn/">中文网</a></p>
+<p>babel可以把最新版本的语法编译成浏览器能够兼容的代码（ES5）</p>
+<h3 id="-">使用</h3>
+<ul>
+<li>安装</li>
+</ul>
+<pre><code class="lang-bash">npm install babel-core --save-dev
+npm install babel-loader --save-dev
+npm install babel-preset-env --save-dev   
+</code></pre>
+<ul>
+<li>配置</li>
+</ul>
+<pre><code class="lang-json">{
+    test: /\.js$/,
+    exclude: /(node_modules)/,
+    use: {
+        loader: &#39;babel-loader&#39;
+    }
+}
+</code></pre>
+<ul>
+<li>babel配置文件</li>
+</ul>
+<pre><code class="lang-js">//在项目根目录创建.babelrc配置文件
+{
+  &quot;presets&quot;: [
+    &quot;env&quot;   # 设置babel处理哪些版本的语法，env包括：ES2015/ES2016/ES2017的结合体
+  ]
+}
+</code></pre>
+<h1 id="webpack-">webpack-插件</h1>
+<blockquote>
+<p>webpack 有着丰富的插件接口(rich plugin interface)。webpack 自身的多数功能都使用这个插件接口。这个插件接口使 webpack 变得<strong>极其灵活</strong>。 </p>
+</blockquote>
+<ul>
+<li>安装</li>
+</ul>
+<pre><code class="lang-bash">npm install --save-dev html-webpack-plugin
+</code></pre>
+<ul>
+<li>使用</li>
+</ul>
+<pre><code class="lang-bash">var HtmlWebpackPlugin = require(&#39;html-webpack-plugin&#39;);
+plugins: [new HtmlWebpackPlugin()],
+</code></pre>
+<h1 id="webpack-dev-server-">webpack-dev-server的使用</h1>
+<p>在开发期间，会用到webpackd的一个辅助包：<code>webpack-dev-server</code>,</p>
+<p><code>webpack-dev-server</code>的作用</p>
+<ul>
+<li>自动开启http服务</li>
+<li>自动打开浏览器</li>
+<li><p>自动监视文件的变化</p>
+</li>
+<li><p>引入，每次修改代码，都需要重新打包</p>
+</li>
+</ul>
+<h2 id="-">基本使用</h2>
+<ul>
+<li>安装</li>
+</ul>
+<pre><code class="lang-bash">npm install --save-dev webpack-dev-server
+</code></pre>
+<ul>
+<li>配置</li>
+</ul>
+<pre><code class="lang-js">  // webpack-dev-server提供了一个简单的服务器，并且能够实时重新加载
+  devServer: {
+     contentBase: &#39;./dist&#39;
+  }
+</code></pre>
+<ul>
+<li>其他配置</li>
+</ul>
+<pre><code class="lang-js">  devServer: {
+     contentBase: &#39;./dist&#39;,
+     port: 9999,
+     open: true,
+  }
+</code></pre>
+<h2 id="-">热更新的说明</h2>
+<ul>
+<li>开启</li>
+</ul>
+<pre><code class="lang-bash">hot: true
+</code></pre>
+<ul>
+<li>配置</li>
+</ul>
+<pre><code class="lang-js">var webpack = require(&quot;webpack&quot;);
+
+plugins: [
+    new HtmlWebpackPlugin({
+        template: path.join(__dirname,&quot;src&quot;, &#39;index.html&#39;)
+    }),
+    new webpack.HotModuleReplacementPlugin()
+],
+</code></pre>
+<ul>
+<li>热更新与dev-server模式不会在生产环境下用，生产环境还是需要<code>npm run build</code></li>
+</ul>
+<h1 id="es6-">ES6模块化</h1>
+<p>在之前的 javascript 中一直是没有模块系统的，前辈们为了解决这些问题，提出了各种规范, 最主要的有CommonJS和AMD两种。前者用于服务器，后者用于浏览器。而 ES6 中提供了简单的模块系统，完全可以取代现有的CommonJS和AMD规范，成为浏览器和服务器通用的模块解决方案。 </p>
+<h2 id="-">基本使用</h2>
+<blockquote>
+<p>一个模块就是一个独立的文件。该文件内部的所有变量，外部无法获取。如果你希望外部能够读取模块内部的某个 变量，就必须使用export关键字输出该变量。下面是一个JS文件，里面使用export命令输出变量。 </p>
+</blockquote>
+<p>es6 中新增了两个命令 <code>export</code> 和 <code>import</code> , <code>export</code> 命令用于规定模块的对外接口，<code>import</code> 命令用于输入其他模块提供的功能 </p>
+<pre><code class="lang-js">// a.js
+export const name = &#39;hucc&#39;
+export const age = 18
+export const desc = &#39;很帅&#39;
+
+</code></pre>
+<p>使用export命令定义了模块的对外接口以后，其他JS文件就可以通过import命令加载这个模块（文件） </p>
+<pre><code class="lang-js">//main.js
+import {name, age, desc} from &#39;./a.js&#39;
+console.log(&#39;从模块内部导出的内容:&#39;, name, age, desc)
+</code></pre>
+<h2 id="export-">export详解</h2>
+<p>上面介绍了模块化最基础的用法，export 不止可以导出函数，还可以导出对象，数组，字符串等等</p>
+<pre><code class="lang-js">//a.js
+export const name = &#39;hucc&#39;
+export const arr = [1, 2, 3]
+export const obj = {
+  name: &#39;zs&#39;,
+  age: 18
+}
+</code></pre>
+<p> export的写法，除了像上面这样，还有另外一种。 </p>
+<pre><code class="lang-js">//a.js
+const name = &#39;hucc&#39;
+const arr = [1, 2, 3]
+const obj = {
+  name: &#39;zs&#39;,
+  age: 18
+}
+
+//    优点：上面代码在export命令后面，使用大括号指定所要输出的一组变量。它与前一种写法是等价的，但是应该优先考虑使用这种写法。因为这样就可以在脚本尾部，一眼看清楚输出了哪些变量。 
+export {name, arr, obj}
+</code></pre>
+<p>通过 as 改变输出名称 </p>
+<pre><code class="lang-js">//a.js
+const name = &#39;hucc&#39;
+const arr = [1, 2, 3]
+const obj = {
+  name: &#39;zs&#39;,
+  age: 18
+}
+//通过as把obj的名字改成了user，导入时只能写 as 后的命名
+export {name, arr, obj as user}
+
+//main.js
+import {name, arr, user} from &#39;./a.js&#39;
+console.log(&#39;读取的值：&#39;, name, arr, user)
+</code></pre>
+<p>上面的写法中，<code>import</code> 中需要指定加载的变量名或函数名，否则无法加载。但是，用户肯定希望快速上手，未必愿意阅读文档，去了解模块有哪些属性和方法。 </p>
+<p><code>export default</code> 指定默认输出, import 无需知道变量名就可以直接使用 </p>
+<pre><code class="lang-js">//a.js
+export default function fn () {
+  console.log(&#39;哈哈&#39;)
+}
+
+//main.js
+//在导入时，可以随意的使用变量名来接收
+import a from &#39;./a&#39;
+a()
+</code></pre>
+<p><strong>注意：export default是非常用的语法，用的很多, 以一些常用的模块为例</strong></p>
+<pre><code class="lang-js">import $ from &#39;jQuery&#39;   // 加载jQuery 库
+import _ from &#39;lodash&#39;   // 加载 lodash
+import moment from &#39;moment&#39; // 加载 moment
+</code></pre>
+<h2 id="import-">import详解</h2>
+<p><code>import</code> 为加载模块的命令，基础使用方式和之前一样 </p>
+<pre><code class="lang-js">//main.js
+import {name, arr, user} from &#39;./a&#39;
+
+//如果是export default导出的内容
+import a from &#39;./a&#39;
+</code></pre>
+<p>通过 as 命令修改导入的变量名</p>
+<pre><code class="lang-js">//main.js
+import {name as n, arr, user} from &#39;./a&#39;
+</code></pre>
+<p>加载模块的全部内容</p>
+<pre><code class="lang-js">//a.js
+const name = &#39;hucc&#39;
+const arr = [1, 2, 3]
+const obj = {
+  name: &#39;zs&#39;,
+  age: 18
+}
+export {name, arr, obj as user}
+
+
+//math.js
+//除了指定输出变量名或者 export.default 定义的导入， 还可以通过 * 号加载模块的全部.
+import * as all from &#39;./a&#39;
+console.log(all.name)
+console.log(all.arr)
+console.log(all.user)
+</code></pre>
+<h2 id="-">兼容性说明</h2>
+<p>上面介绍了，es6 中模块的使用方式，但是现在es6的模块化，无论在浏览器端还是 node.js 上都没有得到很好的支持，所以需要，一些转码的工具（babel）。使我们可以用es6的方式来编码，最后输出es5的代码。 </p>
+<h1 id="-">单文件组件</h1>
+<h2 id="-">介绍</h2>
+<blockquote>
+<p>文件扩展名为 <code>.vue</code> 的 <strong>single-file components(单文件组件)</strong> </p>
+</blockquote>
+<p><a href="https://cn.vuejs.org/v2/guide/single-file-components.html">单文件组件</a></p>
+<p>优势：</p>
+<ul>
+<li><a href="https://github.com/vuejs/awesome-vue#source-code-editing">完整语法高亮</a></li>
+<li><a href="https://webpack.js.org/concepts/modules/#what-is-a-webpack-module">CommonJS 模块</a></li>
+<li><a href="https://vue-loader.vuejs.org/zh-cn/features/scoped-css.html">组件作用域的 CSS</a></li>
+</ul>
+<h2 id="vscode-">vscode插件的安装</h2>
+<ul>
+<li><code>vutur</code>:默认单文件组件是没有高亮的，需要安装此插件</li>
+<li><code>vue 2 snippets</code>:vue的智能提示，提供了很多vue的快捷键</li>
+</ul>
+<h2 id="-">单文件组件的格式介绍</h2>
+<pre><code class="lang-vue">&lt;!-- 组件的模板 --&gt;
+&lt;template&gt;
+
+&lt;/template&gt;
+
+&lt;!-- 组件对象 --&gt;
+&lt;script&gt;
+export default {
+    data () {},
+    created() {}
+}
+&lt;/script&gt;
+
+&lt;!-- 组件的样式,可以使用其他预编译语言来编写 --&gt;
+&lt;style lang=&quot;less&quot;&gt;
+
+&lt;/style&gt;
+</code></pre>
+<h2 id="vue-loader-">vue-loader处理单文件组件</h2>
+<ul>
+<li>新建单文件组件<code>App.vue</code></li>
+</ul>
+<pre><code class="lang-vue">&lt;template&gt;
+  &lt;div&gt;{{msg}}&lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  data () {
+    return {
+      msg: &#39;hello Vue!!!&#39;
+    }
+  }
+}
+&lt;/script&gt;
+
+&lt;style&gt;
+div {
+  color: red;
+}
+&lt;/style&gt;
+
+</code></pre>
+<ul>
+<li>安装vue</li>
+</ul>
+<pre><code class="lang-bash">npm install vue
+</code></pre>
+<ul>
+<li>准备app.js</li>
+</ul>
+<pre><code class="lang-js">// webpack的入口文件
+import Vue from &quot;vue&quot;
+
+// 导入根组件
+import App from &quot;./App.vue&quot;
+
+// 引入vue
+const vm = new Vue({
+  el: &quot;#app&quot;,
+  template: &quot;&lt;Vue/&gt;&quot;,
+  components: {
+    App
+  }
+})
+</code></pre>
+<ul>
+<li>打包，会报错</li>
+</ul>
+<pre><code class="lang-js">ERROR in ./src/App.vue 1:0
+Module parse failed: Unexpected token (1:0)
+You may need an appropriate loader to handle this file type.
+</code></pre>
+<ul>
+<li>需要vue-loader</li>
+</ul>
+<pre><code class="lang-js">npm install vue-loader --save-dev
+</code></pre>
+<ul>
+<li>配置</li>
+</ul>
+<pre><code class="lang-js">// webpack.config.js
+const VueLoaderPlugin = require(&#39;vue-loader/lib/plugin&#39;)
+
+module.exports = {
+  module: {
+    rules: [
+      // ... 其它规则
+      {
+        test: /\.vue$/,
+        loader: &#39;vue-loader&#39;
+      }
+    ]
+  },
+  plugins: [
+    // 请确保引入这个插件！
+    new VueLoaderPlugin()
+  ]
+}
+</code></pre>
+<ul>
+<li>打包报错</li>
+</ul>
+<pre><code class="lang-js">[vue-loader] vue-template-compiler must be installed as a peer dependency, or a compatible compiler implementation must be passed via options.
+</code></pre>
+<ul>
+<li>安装依赖项</li>
+</ul>
+<pre><code class="lang-bash">npm install vue-template-compiler --save-dev
+</code></pre>
+<ul>
+<li>报错</li>
+</ul>
+<pre><code class="lang-js">vue.runtime.esm.js:588 [Vue warn]: You are using the runtime-only build of Vue where the template compiler is not available. Either pre-compile the templates into render functions, or use the compiler-included build.
+
+(found in &lt;Root&gt;)
+</code></pre>
+<h2 id="vue-">vue的构建版本介绍</h2>
+<ul>
+<li>重新导入vue</li>
+</ul>
+<pre><code class="lang-js">import Vue from &quot;vue/dist/vue.esm&quot;
+</code></pre>
+<ul>
+<li>重新编译，发现就可以了</li>
+</ul>
+<ul>
+<li>对比引入<code>vue.esm</code>与<code>vue</code>的区别</li>
+</ul>
+<pre><code>template方法 与 render方法
+</code></pre><h1 id="webpack-vue-router">webpack-配置vue-router</h1>
+<ul>
+<li>安装vue-router</li>
+</ul>
+<pre><code class="lang-js">npm install vue-router
+</code></pre>
+<ul>
+<li>使用vue-router</li>
+</ul>
+<pre><code class="lang-js">// import Vue from &quot;vue&quot;
+import Vue from &quot;vue/dist/vue.esm&quot;
+
+// 引入vue-router
+import VueRouter from &quot;vue-router&quot;
+
+// 使用路由
+Vue.use(VueRouter)
+</code></pre>
+<ul>
+<li>配置路由</li>
+</ul>
+<pre><code class="lang-js">const router = new  VueRouter({
+  routes: [
+    {path: &quot;/&quot;, redirect: &#39;/home&#39;},
+    {path: &quot;/home&quot;, component: Home},
+    {path: &quot;/list&quot;, component: List}
+  ]
+})
+</code></pre>
+<ul>
+<li>使用路由</li>
+</ul>
+<pre><code class="lang-js">new Vue({
+  el: &quot;#app&quot;,
+  template: &#39;&lt;App&gt;&lt;/App&gt;&#39;,
+  components: { App  },
+  router
+})
+</code></pre>
+<h1 id="-">路由功能模块化提取</h1>
+<p>vue-router模块功能提取</p>
+<pre><code class="lang-js">// 使用路由
+import Vue from &quot;vue/dist/vue.esm&quot;
+import VueRouter from &quot;vue-router&quot;
+
+import Home from &quot;../components/Home.vue&quot;
+import List from &quot;../components/List.vue&quot;
+Vue.use(VueRouter)
+const router = new  VueRouter({
+  routes: [
+    {path: &quot;/&quot;, redirect: &#39;/home&#39;},
+    {path: &quot;/home&quot;, component: Home},
+    {path: &quot;/list&quot;, component: List}
+  ]
+})
+
+export default router
+</code></pre>
+</article>
+  </div>
+</body>
+</html>
+<script type="text/javascript" src="lib/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="lib/js/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript" src="lib/js/ztree_toc.min.js"></script>
+<script type="text/javascript" src="lib/js/toc_conf.js"></script>
+<script src="lib/js/highlight.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // 代码高亮的js代码
+    hljs.initHighlightingOnLoad();
+
+    //生成侧边栏的代码
+    var css_conf = eval(markdown_panel_style);
+    $('#readme').css(css_conf)
+
+    var conf = eval(jquery_ztree_toc_opts);
+    $('#tree').ztree_toc(conf);
+  });
+</script>
